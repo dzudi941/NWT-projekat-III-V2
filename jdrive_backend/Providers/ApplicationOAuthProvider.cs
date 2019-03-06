@@ -10,6 +10,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using jdrive_backend.Models;
+using jDrive.DataModel.Models;
 
 namespace jdrive_backend.Providers
 {
@@ -52,6 +53,15 @@ namespace jdrive_backend.Providers
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
         {
+            if (context.Request.Method == "OPTIONS")
+            {
+                context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+                context.OwinContext.Response.Headers.Add("Access-Control-Allow-Headers", new[] { "authorization" });
+                context.RequestCompleted();
+                return Task.FromResult(0);
+            }
+
+
             foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
             {
                 context.AdditionalResponseParameters.Add(property.Key, property.Value);

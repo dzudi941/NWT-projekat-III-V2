@@ -35,6 +35,10 @@ namespace jdrive_backend.Models
     public class RegisterBindingModel
     {
         [Required]
+        [Display(Name = "FullName")]
+        public string FullName { get; set; }
+
+        [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -48,6 +52,22 @@ namespace jdrive_backend.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "User Type")]
+        public string UserType { get; set; }
+    }
+
+    public class LoginBindingModel
+    {
+        [Required]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
     }
 
     public class RegisterExternalBindingModel

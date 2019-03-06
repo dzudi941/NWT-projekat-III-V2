@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jdrive_backend", "jdrive_backend\jdrive_backend.csproj", "{F30D84B2-F06B-41E8-B3A5-C5481F64AD8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jDrive.Web", "jdrive_backend\jDrive.Web.csproj", "{F30D84B2-F06B-41E8-B3A5-C5481F64AD8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jDrive.DataModel", "jDrive.DataModel\jDrive.DataModel.csproj", "{5CED99F4-27DB-4E65-A099-7C149E8AAF12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jDrive.Services", "jDrive.Services\jDrive.Services.csproj", "{72F50E27-FF0E-43E9-814B-E549C5953040}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{F30D84B2-F06B-41E8-B3A5-C5481F64AD8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F30D84B2-F06B-41E8-B3A5-C5481F64AD8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F30D84B2-F06B-41E8-B3A5-C5481F64AD8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CED99F4-27DB-4E65-A099-7C149E8AAF12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CED99F4-27DB-4E65-A099-7C149E8AAF12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CED99F4-27DB-4E65-A099-7C149E8AAF12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CED99F4-27DB-4E65-A099-7C149E8AAF12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72F50E27-FF0E-43E9-814B-E549C5953040}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72F50E27-FF0E-43E9-814B-E549C5953040}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72F50E27-FF0E-43E9-814B-E549C5953040}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72F50E27-FF0E-43E9-814B-E549C5953040}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

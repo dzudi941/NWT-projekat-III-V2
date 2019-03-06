@@ -10,6 +10,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using jdrive_backend.Providers;
 using jdrive_backend.Models;
+using jDrive.DataModel.Models;
 
 namespace jdrive_backend
 {
@@ -23,7 +24,7 @@ namespace jdrive_backend
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context and user manager to use a single instance per request
-            app.CreatePerOwinContext(ApplicationDbContext.Create);
+            app.CreatePerOwinContext(JDriveDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
 
             // Enable the application to use a cookie to store information for the signed in user
@@ -41,6 +42,7 @@ namespace jdrive_backend
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
+                
             };
 
             // Enable the application to use bearer tokens to authenticate users

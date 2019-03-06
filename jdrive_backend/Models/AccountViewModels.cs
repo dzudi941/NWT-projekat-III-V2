@@ -1,4 +1,5 @@
-﻿using System;
+﻿using jDrive.DataModel.Models;
+using System;
 using System.Collections.Generic;
 
 namespace jdrive_backend.Models
@@ -27,11 +28,17 @@ namespace jdrive_backend.Models
 
     public class UserInfoViewModel
     {
+        public string Id { get; set; }
+        public string FullName { get; set; }
         public string Email { get; set; }
-
+        public string UserType { get; set; }
         public bool HasRegistered { get; set; }
-
         public string LoginProvider { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public double TotalDistance { get; set; }
+        public RequestStatus RequestStatus { get; set; }
+        public float Rating { get; set; }
     }
 
     public class UserLoginInfoViewModel
