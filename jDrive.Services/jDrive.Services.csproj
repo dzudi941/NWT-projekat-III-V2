@@ -83,12 +83,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DriverService.cs" />
+    <Compile Include="Services\IDriverService.cs" />
+    <Compile Include="Services\IPassengerService.cs" />
     <Compile Include="Services\IRepository.cs" />
+    <Compile Include="Services\IRideService.cs" />
+    <Compile Include="Services\PassengerService.cs" />
     <Compile Include="Services\Repository.cs" />
+    <Compile Include="Services\RideService.cs" />
     <Compile Include="Specifications\AndSpecificationcs.cs" />
+    <Compile Include="Specifications\RideRouteSpecification.cs" />
     <Compile Include="Specifications\NotSpecification.cs" />
     <Compile Include="Specifications\OrSpecification.cs" />
     <Compile Include="Specifications\ParameterReplacer.cs" />
+    <Compile Include="Specifications\RideNumberSpecification.cs" />
+    <Compile Include="Specifications\RideUserSpecification.cs" />
     <Compile Include="Specifications\Specification.cs" />
   </ItemGroup>
   <ItemGroup>
