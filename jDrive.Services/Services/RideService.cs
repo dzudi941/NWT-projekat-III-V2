@@ -50,7 +50,7 @@ namespace jDrive.Services.Services
 
         public Ride AcceptedRide(string userId)
         {
-            return _repository.Find(new RideUserSpecification(userId)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Accepted);
+            return _repository.Find(new RideUserSpecification(userId), nameof(Driver), nameof(Passenger)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Accepted);
         }
 
         public IEnumerable<Ride> GetRideRequests(string userId)

@@ -1,7 +1,10 @@
 using jDrive.DataModel.Models;
 using jDrive.Services.Services;
+using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using Unity;
+using Unity.Lifetime;
 using Unity.WebApi;
 
 namespace jdrive_backend
@@ -16,7 +19,8 @@ namespace jdrive_backend
             // it is NOT necessary to register your controllers
 
             // e.g. container.RegisterType<ITestService, TestService>();
-            container.RegisterType<IJDriveDbContext, JDriveDbContext>();
+            container.RegisterType<IJDriveDbContext, JDriveDbContext>(new PerResolveLifetimeManager());
+            //container.RegisterInstance(typeof(IJDriveDbContext), new JDriveDbContext());
             //container.RegisterType<IDbContextHolder, DbContextHolder>();
             container.RegisterType<IRepository<Ride>, Repository<Ride>>();
             container.RegisterType<IRepository<Driver>, Repository<Driver>>();

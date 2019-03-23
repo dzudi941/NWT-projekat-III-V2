@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace jDrive.Services.Services
 {
@@ -66,10 +67,12 @@ namespace jDrive.Services.Services
             }
         }
 
-        public IEnumerable<T> Find(Specification<T> specification)
+        public IEnumerable<T> Find(Specification<T> specification, params string[] includes)
         {
             var exp = specification.ToExpression();
-            return Entities.Where(exp);
+            IQueryable<T> sets = Entities;
+            foreach (var include in includes) sets = sets.Include(include);
+            return sets.Where(exp);
         }
 
         public T GetByID(object id)

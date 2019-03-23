@@ -11,6 +11,6 @@ namespace jDrive.Services.Services
         void Update(T entity);
         void Delete(T entity);
         IEnumerable<T> Table { get; }
-        IEnumerable<T> Find(Specification<T> specification);
+        IEnumerable<T> Find(Specification<T> specification, params string[] includes);
     }
 }
