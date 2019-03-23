@@ -10,10 +10,10 @@ namespace jDrive.Services.Services
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly JDriveDbContext _context;
+        private readonly IJDriveDbContext _context;
         private IDbSet<T> _entities;
 
-        public Repository(JDriveDbContext _context)
+        public Repository(IJDriveDbContext _context)
         {
             this._context = _context;
         }
@@ -68,7 +68,8 @@ namespace jDrive.Services.Services
 
         public IEnumerable<T> Find(Specification<T> specification)
         {
-            return this.Entities.Where(specification.ToExpression()).ToList();
+            var exp = specification.ToExpression();
+            return this.Entities.Where(exp);//.ToList();
         }
 
         public T GetByID(object id)
@@ -130,6 +131,25 @@ namespace jDrive.Services.Services
                 var fail = new Exception(msg, dbEx);
                 throw fail;
             }
+        }
+
+        private bool disposed = false;
+        public void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

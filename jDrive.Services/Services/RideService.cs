@@ -8,12 +8,12 @@ namespace jDrive.Services.Services
     public class RideService : IRideService
     {
         private IRepository<Ride> _repository;
-        private JDriveDbContext _context;
+        //private JDriveDbContext _context;
 
-        public RideService(JDriveDbContext context)
-        {
-            _context = context;
-        }
+        //public RideService(JDriveDbContext context)
+        //{
+        //    _context = context;
+        //}
 
         public RideService(IRepository<Ride> repository)
         {
@@ -40,6 +40,7 @@ namespace jDrive.Services.Services
             if (ride.PassengerRating > 0 && ride.DriverRating > 0)
                 ride.RequestStatus = RequestStatus.Finished;
             //_repository.SaveChanges();
+            _repository.Update(ride);
         }
 
         public Ride GetRide(double startLatitude, double startLongitude, double finishLatitude, double finishLongitude)
@@ -47,14 +48,27 @@ namespace jDrive.Services.Services
             return _repository.Find(new RideRouteSpecification(startLatitude, startLongitude, finishLatitude, finishLongitude)).FirstOrDefault();
         }
 
-        public IEnumerable<Ride> GetRides(ApplicationUser applicationUser)
+        public IEnumerable<Ride> GetRides(string userId)
         {
-            return _repository.Find(new RideUserSpecification(applicationUser));
+            return _repository.Find(new RideUserSpecification(userId)).Where(x=>x.RequestStatus == RequestStatus.Finished);
         }
 
-        public bool RideIsAccepted(ApplicationUser applicationUser)
+        public Ride AcceptedRide(string userId)
         {
-            return _repository.Find(new RideUserSpecification(applicationUser)).Any(x => x.RequestStatus == RequestStatus.Accepted);
+            //return /*_repository.Table.FirstOrDefault(x => (x.Driver?.Id == userId || x.Passenger?.Id == userId) && x.RequestStatus == RequestStatus.Accepted); //*/
+            return _repository.Find(new RideUserSpecification(userId)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Accepted);
+        }
+
+        public IEnumerable<Ride> GetRideRequests(string userId)
+        {
+            return _repository.Find(new RideUserSpecification(userId)).Where(x => x.RequestStatus == RequestStatus.Pending);
+        }
+
+        public void AcceptRide(int rideId)
+        {
+            var ride = _repository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
+            ride.RequestStatus = RequestStatus.Accepted;
+            _repository.Update(ride);
         }
     }
 }

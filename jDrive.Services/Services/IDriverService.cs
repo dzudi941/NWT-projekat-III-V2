@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 namespace jDrive.Services.Services
 {
-    interface IDriverService
+    public interface IDriverService
     {
         //Driver FindDrivers(double startLatitude, double startLongitude, double finishLatitude, double finishLongitude);
         void AddDriver(Driver driver);
         IEnumerable<Driver> GetDrivers();
+        Driver GetDriver(string id);
+        void UpdatePosition(string userId, double longitude, double latitude);
     }
 }

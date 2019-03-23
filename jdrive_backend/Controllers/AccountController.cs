@@ -19,6 +19,7 @@ using jdrive_backend.Results;
 using System.Web.Http.Cors;
 using System.Linq;
 using jDrive.DataModel.Models;
+using jDrive.Services.Services;
 
 namespace jdrive_backend.Controllers
 {
@@ -29,9 +30,15 @@ namespace jdrive_backend.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private IRideService _rideService;
+        private IDriverService _driverService;
+        private IPassengerService _passengerService;
 
-        public AccountController()
+        public AccountController(IRideService rideService, IDriverService driverService, IPassengerService passengerService)
         {
+            _rideService = rideService;
+            _driverService = driverService;
+            _passengerService = passengerService;
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -63,16 +70,20 @@ namespace jdrive_backend.Controllers
         {
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
+            var userId = User.Identity.GetUserId();
+            //ApplicationUser currentUser = _driverService.GetDriver(userId);
+           // currentUser = currentUser ?? _passengerService.GetUser(userId);
             float rating = 0;
-            JDriveDbContext db = new JDriveDbContext();
-            if(currentUser is Passenger)
-            {
-                rating = (float)db.Rides.Where(x => x.Passenger.Id == currentUser.Id && x.RequestStatus == RequestStatus.Finished).Average(x => x.DriverRating);
-            }
-            else
-            {
-                rating = (float)db.Rides.Where(x => x.Driver.Id == currentUser.Id && x.RequestStatus == RequestStatus.Finished).Average(x => x.PassengerRating);
-            }
+           // _rideService.GetRides(currentUser).Where(x=> x.RequestStatus == RequestStatus.Finished).Average(x => currentUser is Driver ? x.DriverRating : x.PassengerRating);
+            //JDriveDbContext db = new JDriveDbContext();
+            //if(currentUser is Passenger)
+            //{
+            //    rating = (float)db.Rides.Where(x => x.Passenger.Id == currentUser.Id && x.RequestStatus == RequestStatus.Finished).Average(x => x.DriverRating);
+            //}
+            //else
+            //{
+            //    rating = (float)db.Rides.Where(x => x.Driver.Id == currentUser.Id && x.RequestStatus == RequestStatus.Finished).Average(x => x.PassengerRating);
+            //}
             return new UserInfoViewModel
             {
                 FullName = currentUser.FullName,

@@ -92,6 +92,9 @@
     <Compile Include="Services\Repository.cs" />
     <Compile Include="Services\RideService.cs" />
     <Compile Include="Specifications\AndSpecificationcs.cs" />
+    <Compile Include="Specifications\DriverIdSpecification.cs" />
+    <Compile Include="Specifications\PassengerIdSpecification.cs" />
+    <Compile Include="Specifications\UserIdSpecification.cs" />
     <Compile Include="Specifications\RideRouteSpecification.cs" />
     <Compile Include="Specifications\NotSpecification.cs" />
     <Compile Include="Specifications\OrSpecification.cs" />

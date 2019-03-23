@@ -2,8 +2,9 @@
 
 namespace jDrive.Services.Services
 {
-    interface IPassengerService
+    public interface IPassengerService
     {
         void AddPassenger(Passenger passenger);
+        Passenger GetUser(string id);
     }
 }

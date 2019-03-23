@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web;
 
 namespace jdrive_backend.Models
@@ -15,6 +16,7 @@ namespace jdrive_backend.Models
         public string DriverId { get; set; }
     }
 
+    //[DataContract]
     public class RideViewModel
     {
         public int Id { get; set; }
@@ -35,10 +37,10 @@ namespace jdrive_backend.Models
             StartLongitude = ride.StartLongitude;
             FinishLatitude = ride.FinishLatitude;
             FinishLongitude = ride.FinishLongitude;
-            PassengerId = ride.Passenger.Id;
-            PassengerName = ride.Passenger.FullName;
-            DriverId = ride.Driver.Id;
-            DriverName = ride.Driver.FullName;
+            PassengerId = ride.Passenger?.Id ?? string.Empty;
+            PassengerName = ride.Passenger?.FullName ?? string.Empty;
+            DriverId = ride.Driver?.Id ?? string.Empty;
+            DriverName = ride.Driver?.FullName ?? string.Empty;
             RequestStatus = ride.RequestStatus;
         }
     }
