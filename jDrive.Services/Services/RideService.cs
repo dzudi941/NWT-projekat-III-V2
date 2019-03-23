@@ -8,12 +8,7 @@ namespace jDrive.Services.Services
     public class RideService : IRideService
     {
         private IRepository<Ride> _repository;
-        //private JDriveDbContext _context;
 
-        //public RideService(JDriveDbContext context)
-        //{
-        //    _context = context;
-        //}
 
         public RideService(IRepository<Ride> repository)
         {
@@ -31,7 +26,7 @@ namespace jDrive.Services.Services
 
             if (usertype == "driver" && ride.DriverRating == 0)
             {
-                ride.DriverRating = rating;// int.Parse(rating);
+                ride.DriverRating = rating;
             }
             else if (ride.PassengerRating == 0)
             {
@@ -39,7 +34,7 @@ namespace jDrive.Services.Services
             }
             if (ride.PassengerRating > 0 && ride.DriverRating > 0)
                 ride.RequestStatus = RequestStatus.Finished;
-            //_repository.SaveChanges();
+
             _repository.Update(ride);
         }
 
@@ -55,7 +50,6 @@ namespace jDrive.Services.Services
 
         public Ride AcceptedRide(string userId)
         {
-            //return /*_repository.Table.FirstOrDefault(x => (x.Driver?.Id == userId || x.Passenger?.Id == userId) && x.RequestStatus == RequestStatus.Accepted); //*/
             return _repository.Find(new RideUserSpecification(userId)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Accepted);
         }
 

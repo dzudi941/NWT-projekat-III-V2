@@ -16,8 +16,8 @@ namespace jdrive_backend
             // it is NOT necessary to register your controllers
 
             // e.g. container.RegisterType<ITestService, TestService>();
-            //container.RegisterSingleton<IJDriveDbContext, JDriveDbContext>();
             container.RegisterType<IJDriveDbContext, JDriveDbContext>();
+            //container.RegisterType<IDbContextHolder, DbContextHolder>();
             container.RegisterType<IRepository<Ride>, Repository<Ride>>();
             container.RegisterType<IRepository<Driver>, Repository<Driver>>();
             container.RegisterType<IRepository<Passenger>, Repository<Passenger>>();
@@ -25,7 +25,7 @@ namespace jdrive_backend
             container.RegisterType<IRideService, RideService>();
             container.RegisterType<IDriverService, DriverService>();
             container.RegisterType<IPassengerService, PassengerService>();
-            
+
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }

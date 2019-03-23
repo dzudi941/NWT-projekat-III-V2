@@ -71,25 +71,15 @@ namespace jdrive_backend.Controllers
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
             var userId = User.Identity.GetUserId();
-            //ApplicationUser currentUser = _driverService.GetDriver(userId);
-           // currentUser = currentUser ?? _passengerService.GetUser(userId);
-            float rating = 0;
-           // _rideService.GetRides(currentUser).Where(x=> x.RequestStatus == RequestStatus.Finished).Average(x => currentUser is Driver ? x.DriverRating : x.PassengerRating);
-            //JDriveDbContext db = new JDriveDbContext();
-            //if(currentUser is Passenger)
-            //{
-            //    rating = (float)db.Rides.Where(x => x.Passenger.Id == currentUser.Id && x.RequestStatus == RequestStatus.Finished).Average(x => x.DriverRating);
-            //}
-            //else
-            //{
-            //    rating = (float)db.Rides.Where(x => x.Driver.Id == currentUser.Id && x.RequestStatus == RequestStatus.Finished).Average(x => x.PassengerRating);
-            //}
+            double rating = 0;
+            rating = _rideService.GetRides(userId).Where(x=> x.RequestStatus == RequestStatus.Finished).Average(x => currentUser is Driver ? x.DriverRating : x.PassengerRating);
+
             return new UserInfoViewModel
             {
                 FullName = currentUser.FullName,
                 Email = currentUser.UserName,
                 UserType = currentUser is Driver ? "driver" : "passenger",
-                Rating = rating,
+                Rating = (float)rating,
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
@@ -131,10 +121,6 @@ namespace jdrive_backend.Controllers
             {
                 return GetErrorResult(result);
             }
-            //else
-            //{
-            //    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, model.UserType));
-            //}
 
             return Ok();
         }

@@ -41,4 +41,40 @@ namespace jDrive.DataModel.Models
 
         //}
     }
+
+    //public interface IDbContextHolder
+    //{
+    //    JDriveDbContext JDriveDbContext { get; }
+    //}
+
+    //public class DbContextHolder : IDbContextHolder
+    //{
+    //    public JDriveDbContext JDriveDbContext
+    //    {
+    //        get
+    //        {
+    //            return Test.Instance.JDriveDbContext;
+    //        }
+    //    }
+    //}
+
+    //public class Test
+    //{
+    //    private static Test _test;
+    //    public static Test Instance
+    //    {
+    //        get
+    //        {
+    //            return _test ?? (_test = new Test());
+    //        }
+    //    }
+    //    private JDriveDbContext _jDriveDbContext;
+    //    public JDriveDbContext JDriveDbContext
+    //    {
+    //        get
+    //        {
+    //            return _jDriveDbContext ?? (_jDriveDbContext = new JDriveDbContext());
+    //        }
+    //    }
+    //}
 }

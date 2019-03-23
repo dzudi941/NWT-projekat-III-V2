@@ -22,7 +22,7 @@ namespace jDrive.Services.Services
         {
             get
             {
-                return this.Entities;
+                return Entities;
             }
         }
 
@@ -46,12 +46,12 @@ namespace jDrive.Services.Services
                 {
                     throw new ArgumentNullException("entity");
                 }
-                this.Entities.Remove(entity);
-                this._context.SaveChanges();
+                Entities.Remove(entity);
+                _context.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = String.Empty;
+                var msg = string.Empty;
 
                 foreach (var validationErrors in dbEx.EntityValidationErrors)
                 {
@@ -69,7 +69,7 @@ namespace jDrive.Services.Services
         public IEnumerable<T> Find(Specification<T> specification)
         {
             var exp = specification.ToExpression();
-            return this.Entities.Where(exp);//.ToList();
+            return Entities.Where(exp);
         }
 
         public T GetByID(object id)
@@ -85,12 +85,12 @@ namespace jDrive.Services.Services
                 {
                     throw new ArgumentNullException("entity");
                 }
-                this.Entities.Add(entity);
-                this._context.SaveChanges();
+                Entities.Add(entity);
+                _context.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = String.Empty;
+                var msg = string.Empty;
 
                 foreach (var validationErrors in dbEx.EntityValidationErrors)
                 {
@@ -113,12 +113,12 @@ namespace jDrive.Services.Services
                 {
                     throw new ArgumentNullException("entity");
                 }
-                this._context.Entry(entity).State = EntityState.Modified;
-                this._context.SaveChanges();
+                _context.Entry(entity).State = EntityState.Modified;
+                _context.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = String.Empty;
+                var msg = string.Empty;
 
                 foreach (var validationErrors in dbEx.EntityValidationErrors)
                 {
