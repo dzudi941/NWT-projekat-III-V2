@@ -2,6 +2,7 @@ using jDrive.DataModel.Models;
 using jDrive.Services.Services;
 using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Http;
 using Unity;
 using Unity.Lifetime;
@@ -19,7 +20,7 @@ namespace jdrive_backend
             // it is NOT necessary to register your controllers
 
             // e.g. container.RegisterType<ITestService, TestService>();
-            container.RegisterType<IJDriveDbContext, JDriveDbContext>(new PerResolveLifetimeManager());
+            container.RegisterType<IJDriveDbContext, JDriveDbContext>(new PerRequestLifetimeManager());
             //container.RegisterInstance(typeof(IJDriveDbContext), new JDriveDbContext());
             //container.RegisterType<IDbContextHolder, DbContextHolder>();
             container.RegisterType<IRepository<Ride>, Repository<Ride>>();
@@ -31,6 +32,32 @@ namespace jdrive_backend
             container.RegisterType<IPassengerService, PassengerService>();
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+        }
+    }
+
+    public class PerRequestLifetimeManager : LifetimeManager
+    {
+        private readonly object key = new object();
+
+        public override object GetValue()
+        {
+            if (HttpContext.Current != null &&
+                HttpContext.Current.Items.Contains(key))
+                return HttpContext.Current.Items[key];
+            else
+                return null;
+        }
+
+        public override void RemoveValue()
+        {
+            if (HttpContext.Current != null)
+                HttpContext.Current.Items.Remove(key);
+        }
+
+        public override void SetValue(object newValue)
+        {
+            if (HttpContext.Current != null)
+                HttpContext.Current.Items[key] = newValue;
         }
     }
 }
