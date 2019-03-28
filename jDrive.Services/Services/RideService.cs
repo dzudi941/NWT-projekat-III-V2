@@ -64,5 +64,10 @@ namespace jDrive.Services.Services
             ride.RequestStatus = RequestStatus.Accepted;
             _repository.Update(ride);
         }
+
+        public int GetRideNumber(string driverId, string passengerId)
+        {
+            return _repository.Find(new AndSpecification<Ride>(new RideUserSpecification(driverId), new RideUserSpecification(passengerId))).Count(x => x.RequestStatus == RequestStatus.Finished);
+        }
     }
 }

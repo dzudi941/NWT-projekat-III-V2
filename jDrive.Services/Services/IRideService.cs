@@ -12,5 +12,6 @@ namespace jDrive.Services.Services
         Ride GetRide(double startLatitude, double startLongitude, double finishLatitude, double finishLongitude);
         IEnumerable<Ride> GetRideRequests(string userId);
         void AcceptRide(int rideId);
+        int GetRideNumber(string driverId, string passengerId);
     }
 }

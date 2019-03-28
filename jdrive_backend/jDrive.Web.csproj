@@ -299,6 +299,10 @@
     <Compile Include="Migrations\201901242248584_rating.Designer.cs">
       <DependentUpon>201901242248584_rating.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903281842109_driverModelUpdated.cs" />
+    <Compile Include="Migrations\201903281842109_driverModelUpdated.Designer.cs">
+      <DependentUpon>201903281842109_driverModelUpdated.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -427,6 +431,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901242248584_rating.resx">
       <DependentUpon>201901242248584_rating.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903281842109_driverModelUpdated.resx">
+      <DependentUpon>201903281842109_driverModelUpdated.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

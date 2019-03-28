@@ -29,8 +29,9 @@ namespace jdrive_backend.Models
         public string DriverId { get; set; }
         public string DriverName { get; set; }
         public RequestStatus RequestStatus { get; set; }
+        public string ExtraMessage { get; set; }
 
-        public RideViewModel(Ride ride)
+        public RideViewModel(Ride ride, string extraMessage = "")
         {
             Id = ride.Id;
             StartLatitude = ride.StartLatitude;
@@ -42,6 +43,7 @@ namespace jdrive_backend.Models
             DriverId = ride.Driver?.Id ?? string.Empty;
             DriverName = ride.Driver?.FullName ?? string.Empty;
             RequestStatus = ride.RequestStatus;
+            ExtraMessage = extraMessage;
         }
     }
 }

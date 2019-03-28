@@ -39,6 +39,7 @@ namespace jdrive_backend.Models
         public double TotalDistance { get; set; }
         public RequestStatus RequestStatus { get; set; }
         public float Rating { get; set; }
+        public int? RideDiscountNumber { get; set; }
     }
 
     public class UserLoginInfoViewModel

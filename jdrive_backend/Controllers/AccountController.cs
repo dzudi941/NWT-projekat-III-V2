@@ -62,6 +62,13 @@ namespace jdrive_backend.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
+        [HttpGet]
+        [Route("UpdateRideDiscountNumber")]
+        public void UpdateRideDiscountNumber(int rideDiscountNumber)
+        {
+            var userId = User.Identity.GetUserId();
+            _driverService.UpdateRideDiscountNumber(userId, rideDiscountNumber);
+        }
 
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -80,6 +87,7 @@ namespace jdrive_backend.Controllers
                 Email = currentUser.UserName,
                 UserType = currentUser is Driver ? "driver" : "passenger",
                 Rating = (float)rating,
+                RideDiscountNumber = currentUser is Driver ? ((Driver)currentUser).RideDiscountNumber : 0,
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };

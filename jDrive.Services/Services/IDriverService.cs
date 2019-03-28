@@ -9,5 +9,7 @@ namespace jDrive.Services.Services
         IEnumerable<Driver> GetDrivers();
         Driver GetDriver(string id);
         void UpdatePosition(string userId, double longitude, double latitude);
+        void UpdateRideDiscountNumber(string userId, int rideDiscountNumber);
+        bool RideNumberMatch(string userId, int rideNumber);
     }
 }

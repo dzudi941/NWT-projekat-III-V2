@@ -93,14 +93,23 @@ namespace jdrive_backend.Controllers
             return Ok();
         }
 
-        //GET api/Ride/CheckIfRideIsAccepted
+        //GET api/Ride/CurrentRide
         [HttpGet]
-        [Route("CheckIfRideIsAccepted")]
-        public RideViewModel CheckIfRideIsAccepted()
+        [Route("CurrentRide")]
+        public RideViewModel CurrentRide()
         {
             var userId = User.Identity.GetUserId();
             var acceptedRide = _rideService.AcceptedRide(userId);
-            return acceptedRide != null ? new RideViewModel(acceptedRide) : null;
+            RideViewModel rideViewModel = null;
+            if (acceptedRide != null)
+            {
+                int rideNumber = _rideService.GetRideNumber(acceptedRide.Driver.Id, acceptedRide.Passenger.Id);
+                bool match = _driverService.RideNumberMatch(acceptedRide.Driver.Id, rideNumber + 1);//+1 is for current ride.
+                rideViewModel = new RideViewModel(acceptedRide, match ? $"This ride is {rideNumber + 1}th and it will have a discount!!!" : "");
+            }
+
+            return rideViewModel;
+            //return acceptedRide != null ? new RideViewModel(acceptedRide) : null;
         }
 
         #endregion
@@ -158,16 +167,16 @@ namespace jdrive_backend.Controllers
             return Ok();
         }
 
-        //GET api/Ride/CurrentRide
-        [HttpGet]
-        [Route("CurrentRide")]
-        public RideViewModel CurrentRide()
-        {
-            var userId = User.Identity.GetUserId();
-            var currentRide = _rideService.AcceptedRide(userId);
+        ////GET api/Ride/CurrentRide
+        //[HttpGet]
+        //[Route("CurrentRide")]
+        //public RideViewModel CurrentRide()
+        //{
+        //    var userId = User.Identity.GetUserId();
+        //    var currentRide = _rideService.AcceptedRide(userId);
 
-            return currentRide != null ? new RideViewModel(currentRide) : null;
-        }
+        //    return currentRide != null ? new RideViewModel(currentRide) : null;
+        //}
 
         #endregion
     }
