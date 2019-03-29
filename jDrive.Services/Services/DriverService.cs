@@ -21,7 +21,7 @@ namespace jDrive.Services.Services
 
         public Driver GetDriver(string id)
         {
-            return _repository.Find(new DriverIdSpecification(id)).FirstOrDefault();
+            return _repository.Find(new UserIdSpecification<Driver>(id)).FirstOrDefault();
         }
 
         public IEnumerable<Driver> GetDrivers()
@@ -31,13 +31,13 @@ namespace jDrive.Services.Services
 
         public bool RideNumberMatch(string userId, int rideNumber)
         {
-            var driver = _repository.Find(new DriverIdSpecification(userId)).FirstOrDefault();
+            var driver = _repository.Find(new UserIdSpecification<Driver>(userId)).FirstOrDefault();
             return rideNumber % driver.RideDiscountNumber == 0;
         }
 
         public void UpdatePosition(string userId, double longitude, double latitude)
         {
-            var driver = _repository.Find(new DriverIdSpecification(userId)).FirstOrDefault();
+            var driver = _repository.Find(new UserIdSpecification<Driver>(userId)).FirstOrDefault();
             driver.Longitude = longitude;
             driver.Latitude = latitude;
             _repository.Update(driver);
@@ -45,7 +45,7 @@ namespace jDrive.Services.Services
 
         public void UpdateRideDiscountNumber(string userId, int rideDiscountNumber)
         {
-            var driver = _repository.Find(new DriverIdSpecification(userId)).FirstOrDefault();
+            var driver = _repository.Find(new UserIdSpecification<Driver>(userId)).FirstOrDefault();
             driver.RideDiscountNumber = rideDiscountNumber;
             _repository.Update(driver);
         }

@@ -13,5 +13,6 @@ namespace jDrive.Services.Services
         IEnumerable<Ride> GetRideRequests(string userId);
         void AcceptRide(int rideId);
         int GetRideNumber(string driverId, string passengerId);
+        DriverStatus GetDriverStatus(string driverId);
     }
 }

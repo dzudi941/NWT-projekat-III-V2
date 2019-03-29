@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using Microsoft.AspNet.Identity;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Http;
 using jdrive_backend.Models;
 using jDrive.DataModel.Models;
@@ -12,7 +11,7 @@ using System.Web.Http.Cors;
 
 namespace jdrive_backend.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [RoutePrefix("api/Ride")]
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class RidesController : ApiController
@@ -47,11 +46,9 @@ namespace jdrive_backend.Controllers
                 double yDistance = Math.Abs(driver.Longitude - startlong);
                 double totalDistance = Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
                 double totalDistanceKm = totalDistance * 111;
-                if (totalDistanceKm < 500) //Find drivers in 1km radius
+                if (totalDistanceKm < 300) //Find drivers in 1km radius
                 {
-                    var ride = _rideService.GetRide(startLat, startlong, finishLat, finishLong);
-
-                    RequestStatus requestStatus = ride != null ? ride.RequestStatus : RequestStatus.NotSent;
+                    DriverStatus driverStatus = _rideService.GetDriverStatus(driver.Id);
                     var nearDriver = new UserInfoViewModel
                     {
                         FullName = driver.FullName,
@@ -61,7 +58,7 @@ namespace jdrive_backend.Controllers
                         Latitude = driver.Latitude,
                         Longitude = driver.Longitude,
                         TotalDistance = totalDistanceKm,
-                        RequestStatus = requestStatus
+                        DriverStatus = driverStatus
                     };
                     nearDrivers.Add(nearDriver);
                 }
@@ -73,7 +70,7 @@ namespace jdrive_backend.Controllers
         //GET api/Ride/SendRequest
         [HttpPost]
         [Route("SendRequest")]
-        public async Task<IHttpActionResult> SendRequest(RideRequestViewModel model)
+        public IHttpActionResult SendRequest(RideRequestViewModel model)
         {
             var driver = _driverService.GetDriver(model.DriverId);
             var userId = User.Identity.GetUserId();
@@ -109,7 +106,6 @@ namespace jdrive_backend.Controllers
             }
 
             return rideViewModel;
-            //return acceptedRide != null ? new RideViewModel(acceptedRide) : null;
         }
 
         #endregion
@@ -166,17 +162,6 @@ namespace jdrive_backend.Controllers
             _rideService.AcceptRide(rideId);
             return Ok();
         }
-
-        ////GET api/Ride/CurrentRide
-        //[HttpGet]
-        //[Route("CurrentRide")]
-        //public RideViewModel CurrentRide()
-        //{
-        //    var userId = User.Identity.GetUserId();
-        //    var currentRide = _rideService.AcceptedRide(userId);
-
-        //    return currentRide != null ? new RideViewModel(currentRide) : null;
-        //}
 
         #endregion
     }

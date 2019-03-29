@@ -20,7 +20,7 @@ namespace jDrive.Services.Services
 
         public Passenger GetUser(string id)
         {
-            return _repository.Find(new PassengerIdSpecification(id)).FirstOrDefault();
+            return _repository.Find(new UserIdSpecification<Passenger>(id)).FirstOrDefault();
         }
     }
 }

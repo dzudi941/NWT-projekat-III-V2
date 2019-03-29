@@ -37,7 +37,7 @@ namespace jdrive_backend.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public double TotalDistance { get; set; }
-        public RequestStatus RequestStatus { get; set; }
+        public DriverStatus DriverStatus { get; set; }
         public float Rating { get; set; }
         public int? RideDiscountNumber { get; set; }
     }
