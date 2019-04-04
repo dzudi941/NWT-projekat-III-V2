@@ -20,11 +20,11 @@ namespace jDrive.Services.Services
             _repository.Insert(ride);
         }
 
-        public void FinishRide(int rideId, string usertype, int rating)
+        public void FinishRide(int rideId, UserType usertype, int rating)
         {
             var ride = _repository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
 
-            if (usertype == "driver" && ride.DriverRating == 0)
+            if (usertype == UserType.Driver && ride.DriverRating == 0)
             {
                 ride.DriverRating = rating;
             }
@@ -53,6 +53,11 @@ namespace jDrive.Services.Services
             return _repository.Find(new RideUserSpecification(userId), nameof(Driver), nameof(Passenger)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Accepted);
         }
 
+        public Ride PendingRequest(string userId)
+        {
+            return _repository.Find(new RideUserSpecification(userId), nameof(Driver), nameof(Passenger)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Pending);
+        }
+
         public IEnumerable<Ride> GetRideRequests(string userId)
         {
             return _repository.Find(new RideUserSpecification(userId)).Where(x => x.RequestStatus == RequestStatus.Pending);
@@ -65,9 +70,16 @@ namespace jDrive.Services.Services
             _repository.Update(ride);
         }
 
+        public void DeclineRide(int rideId)
+        {
+            var ride = _repository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
+            ride.RequestStatus = RequestStatus.Rejected;
+            _repository.Update(ride);
+        }
+
         public int GetRideNumber(string driverId, string passengerId)
         {
-            return _repository.Find(new AndSpecification<Ride>(new RideUserSpecification(driverId), new RideUserSpecification(passengerId))).Count(x => x.RequestStatus == RequestStatus.Finished);
+            return _repository.Find(new RideUserSpecification(driverId).And(new RideUserSpecification(passengerId))).Count(x => x.RequestStatus == RequestStatus.Finished);
         }
 
         public DriverStatus GetDriverStatus(string driverId)
@@ -79,6 +91,13 @@ namespace jDrive.Services.Services
                 return DriverStatus.NotAvailable;
 
             return DriverStatus.Available;
+        }
+
+        public double GetAverageRating(string userId, UserType userType)
+        {
+            var rides = GetRides(userId);
+
+            return rides.Count() > 0 ? rides.Average(x => userType == UserType.Driver ? x.DriverRating : x.PassengerRating) : 0;
         }
     }
 }

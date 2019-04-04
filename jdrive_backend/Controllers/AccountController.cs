@@ -72,15 +72,11 @@ namespace jdrive_backend.Controllers
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
             var userId = User.Identity.GetUserId();
-            double rating = 0;
-            rating = _rideService.GetRides(userId).Where(x=> x.RequestStatus == RequestStatus.Finished).Average(x => currentUser is Driver ? x.DriverRating : x.PassengerRating);
+            double rating = _rideService.GetAverageRating(userId, currentUser is Driver ? UserType.Driver : UserType.Passenger);
 
-            return new UserInfoViewModel
+            return new UserInfoViewModel(currentUser)
             {
-                FullName = currentUser.FullName,
-                Email = currentUser.UserName,
-                UserType = currentUser is Driver ? "driver" : "passenger",
-                Rating = (float)rating,
+                Rating = rating,
                 RideDiscountNumber = currentUser is Driver ? ((Driver)currentUser).RideDiscountNumber : 0,
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
@@ -107,7 +103,7 @@ namespace jdrive_backend.Controllers
             }
 
             ApplicationUser user = null;
-            if (model.UserType == "driver")
+            if (model.UserType == UserType.Driver)
                 user = new Driver();
             else
                 user = new Passenger();

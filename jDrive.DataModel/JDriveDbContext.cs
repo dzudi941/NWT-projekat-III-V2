@@ -24,8 +24,6 @@ namespace jDrive.DataModel.Models
         public JDriveDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            //Set<>
-            //Entry
         }
 
         public static JDriveDbContext Create()
@@ -33,48 +31,5 @@ namespace jDrive.DataModel.Models
 
             return new JDriveDbContext();
         }
-
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Ride>()
-        //        .HasRequired(a => a.Passenger);
-
-        //}
     }
-
-    //public interface IDbContextHolder
-    //{
-    //    JDriveDbContext JDriveDbContext { get; }
-    //}
-
-    //public class DbContextHolder : IDbContextHolder
-    //{
-    //    public JDriveDbContext JDriveDbContext
-    //    {
-    //        get
-    //        {
-    //            return Test.Instance.JDriveDbContext;
-    //        }
-    //    }
-    //}
-
-    //public class Test
-    //{
-    //    private static Test _test;
-    //    public static Test Instance
-    //    {
-    //        get
-    //        {
-    //            return _test ?? (_test = new Test());
-    //        }
-    //    }
-    //    private JDriveDbContext _jDriveDbContext;
-    //    public JDriveDbContext JDriveDbContext
-    //    {
-    //        get
-    //        {
-    //            return _jDriveDbContext ?? (_jDriveDbContext = new JDriveDbContext());
-    //        }
-    //    }
-    //}
 }

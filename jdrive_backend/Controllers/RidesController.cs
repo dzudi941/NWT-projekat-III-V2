@@ -7,13 +7,12 @@ using System.Web.Http;
 using jdrive_backend.Models;
 using jDrive.DataModel.Models;
 using jDrive.Services.Services;
-using System.Web.Http.Cors;
 
 namespace jdrive_backend.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Ride")]
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    //[EnableCors(origins: "*", headers: "*", methods: "*")]
     public class RidesController : ApiController
     {
         private IRideService _rideService;
@@ -27,67 +26,16 @@ namespace jdrive_backend.Controllers
             _passengerService = passengerService;
         }
 
-        #region Passenger
-        // GET api/Ride/FindDrivers
+
+        // GET api/Ride/GetAllRides
         [HttpGet]
-        [Route("FindDrivers")]
-        public IEnumerable<UserInfoViewModel> FindDrivers(string startLatitude, string startLongitude, string finishLatitude, string finishLongitude)
+        [Route("GetAllRides")]
+        public IEnumerable<RideViewModel> GetAllRides()
         {
-            double startLat = double.Parse(startLatitude);
-            double startlong = double.Parse(startLongitude);
-            double finishLat = double.Parse(finishLatitude);
-            double finishLong = double.Parse(finishLongitude);
-
-            var nearDrivers = new List<UserInfoViewModel>();
-            var drivers = _driverService.GetDrivers();
-            foreach (var driver in drivers)
-            {
-                double xDistance = Math.Abs(driver.Latitude - startLat);
-                double yDistance = Math.Abs(driver.Longitude - startlong);
-                double totalDistance = Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
-                double totalDistanceKm = totalDistance * 111;
-                if (totalDistanceKm < 300) //Find drivers in 1km radius
-                {
-                    DriverStatus driverStatus = _rideService.GetDriverStatus(driver.Id);
-                    var nearDriver = new UserInfoViewModel
-                    {
-                        FullName = driver.FullName,
-                        Email = driver.UserName,
-                        UserType = "driver",
-                        Id = driver.Id,
-                        Latitude = driver.Latitude,
-                        Longitude = driver.Longitude,
-                        TotalDistance = totalDistanceKm,
-                        DriverStatus = driverStatus
-                    };
-                    nearDrivers.Add(nearDriver);
-                }
-            }
-
-            return nearDrivers.OrderBy(x => x.TotalDistance).ToList();
-        }
-
-        //GET api/Ride/SendRequest
-        [HttpPost]
-        [Route("SendRequest")]
-        public IHttpActionResult SendRequest(RideRequestViewModel model)
-        {
-            var driver = _driverService.GetDriver(model.DriverId);
             var userId = User.Identity.GetUserId();
-            var user = _passengerService.GetUser(userId);
-            var newRide = new Ride()
-            {
-                StartLatitude = double.Parse(model.StartLatitude),
-                StartLongitude = double.Parse(model.StartLongitude),
-                FinishLatitude = double.Parse(model.FinishLatitude),
-                FinishLongitude = double.Parse(model.FinishLongitude),
-                Driver = driver,
-                Passenger = user
-            };
+            var rides = _rideService.GetRides(userId).Select(x => new RideViewModel(x));
 
-            _rideService.AddRide(newRide);
-
-            return Ok();
+            return rides;
         }
 
         //GET api/Ride/CurrentRide
@@ -102,43 +50,109 @@ namespace jdrive_backend.Controllers
             {
                 int rideNumber = _rideService.GetRideNumber(acceptedRide.Driver.Id, acceptedRide.Passenger.Id);
                 bool match = _driverService.RideNumberMatch(acceptedRide.Driver.Id, rideNumber + 1);//+1 is for current ride.
-                rideViewModel = new RideViewModel(acceptedRide, match ? $"This ride is {rideNumber + 1}th and it will have a discount!!!" : "");
+                string msg = match ? $"This ride is {rideNumber + 1}th and it will have a discount!!!" : string.Empty;
+                rideViewModel = new RideViewModel(acceptedRide, msg);
             }
 
             return rideViewModel;
         }
 
-        #endregion
-
         // GET api/Ride/FinishRide
         [HttpGet]
         [Route("FinishRide")]
-        public IHttpActionResult FinishRide(int rideId, string usertype, int rating)
+        public IHttpActionResult FinishRide(int rideId, UserType userType, int rating)
         {
-            _rideService.FinishRide(rideId, usertype, rating);
+            _rideService.FinishRide(rideId, userType, rating);
             return Ok();
         }
 
-        // GET api/Ride/GetAllRides
+        // GET api/Ride/DeclineRide
         [HttpGet]
-        [Route("GetAllRides")]
-        public IEnumerable<RideViewModel> GetAllRides()
+        [Route("DeclineRide")]
+        public IHttpActionResult DeclineRide(int rideId)
         {
-            var userId = User.Identity.GetUserId();
-            var rides = _rideService.GetRides(userId).Select(x => new RideViewModel(x));
-
-            return rides;
+            _rideService.DeclineRide(rideId);
+            return Ok();
         }
 
+        #region Passenger
+        // GET api/Ride/FindDrivers
+        [HttpGet]
+        [Route("FindDrivers")]
+        public IEnumerable<UserInfoViewModel> FindDrivers(double startLatitude, double startLongitude, double radius)
+        {
+            var nearDrivers = new List<UserInfoViewModel>();
+            var drivers = _driverService.GetDrivers();
+            foreach (var driver in drivers)
+            {
+                var totalDistanceKm = GetTotalDistanceInKm(driver.Latitude, driver.Longitude, startLatitude, startLongitude);
+                if (totalDistanceKm < radius)
+                {
+                    DriverStatus driverStatus = _rideService.GetDriverStatus(driver.Id);
+                    var nearDriver = new UserInfoViewModel(driver)
+                    {
+                        TotalDistance = totalDistanceKm,
+                        DriverStatus = driverStatus
+                    };
+                    nearDrivers.Add(nearDriver);
+                }
+            }
+
+            return nearDrivers.OrderBy(x => x.TotalDistance).ToList();
+        }
+
+        private double GetTotalDistanceInKm(double aLatitude, double aLongitude, double bLatitude, double bLongitude)
+        {
+            double xDistance = Math.Abs(aLatitude - bLatitude);
+            double yDistance = Math.Abs(aLongitude - bLongitude);
+            double totalDistance = Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
+            return totalDistance * 111;
+        }
+
+        //GET api/Ride/SendRequest
+        [HttpPost]
+        [Route("SendRequest")]
+        public IHttpActionResult SendRequest(RideRequestViewModel model)
+        {
+            var driver = _driverService.GetDriver(model.DriverId);
+            var userId = User.Identity.GetUserId();
+            var user = _passengerService.GetPassenger(userId);
+            var newRide = new Ride()
+            {
+                StartLatitude = model.StartLatitude,
+                StartLongitude = model.StartLongitude,
+                FinishLatitude = model.FinishLatitude,
+                FinishLongitude = model.FinishLongitude,
+                Driver = driver,
+                Passenger = user
+            };
+
+            _rideService.AddRide(newRide);
+
+            return Ok();
+        }
+
+        //GET api/Ride/PendingRideRequest
+        [HttpGet]
+        [Route("PendingRideRequest")]
+        public RideViewModel PendingRideRequest()
+        {
+            var userId = User.Identity.GetUserId();
+            var pendingRide = _rideService.PendingRequest(userId);
+
+            return pendingRide != null ? new RideViewModel(pendingRide) : null;
+        }
+
+        #endregion
 
         #region Driver
         // GET api/Ride/UpdatePosition
         [HttpGet]
         [Route("UpdatePosition")]
-        public IHttpActionResult UpdatePosition(string longitude, string latitude)
+        public IHttpActionResult UpdatePosition(double longitude, double latitude)
         {
             var userId = User.Identity.GetUserId();
-           _driverService.UpdatePosition(userId, double.Parse(longitude), double.Parse(latitude));
+           _driverService.UpdatePosition(userId, longitude, latitude);
 
             return Ok();
         }

@@ -9,14 +9,13 @@ namespace jdrive_backend.Models
 {
     public class RideRequestViewModel
     {
-        public string StartLatitude { get; set; }
-        public string StartLongitude { get; set; }
-        public string FinishLatitude { get; set; }
-        public string FinishLongitude { get; set; }
+        public double StartLatitude { get; set; }
+        public double StartLongitude { get; set; }
+        public double FinishLatitude { get; set; }
+        public double FinishLongitude { get; set; }
         public string DriverId { get; set; }
     }
 
-    //[DataContract]
     public class RideViewModel
     {
         public int Id { get; set; }

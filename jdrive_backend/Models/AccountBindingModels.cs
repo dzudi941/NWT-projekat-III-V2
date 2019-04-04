@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using jDrive.DataModel.Models;
 using Newtonsoft.Json;
 
 namespace jdrive_backend.Models
@@ -55,7 +56,7 @@ namespace jdrive_backend.Models
 
         [Required]
         [Display(Name = "User Type")]
-        public string UserType { get; set; }
+        public UserType UserType { get; set; }
     }
 
     public class LoginBindingModel

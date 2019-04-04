@@ -18,7 +18,7 @@ namespace jDrive.Services.Services
             _repository.Insert(passenger);
         }
 
-        public Passenger GetUser(string id)
+        public Passenger GetPassenger(string id)
         {
             return _repository.Find(new UserIdSpecification<Passenger>(id)).FirstOrDefault();
         }

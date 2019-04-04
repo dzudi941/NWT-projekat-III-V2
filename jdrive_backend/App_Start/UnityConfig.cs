@@ -1,7 +1,5 @@
 using jDrive.DataModel.Models;
 using jDrive.Services.Services;
-using System;
-using System.Collections.Generic;
 using System.Web;
 using System.Web.Http;
 using Unity;
@@ -21,8 +19,6 @@ namespace jdrive_backend
 
             // e.g. container.RegisterType<ITestService, TestService>();
             container.RegisterType<IJDriveDbContext, JDriveDbContext>(new PerRequestLifetimeManager());
-            //container.RegisterInstance(typeof(IJDriveDbContext), new JDriveDbContext());
-            //container.RegisterType<IDbContextHolder, DbContextHolder>();
             container.RegisterType<IRepository<Ride>, Repository<Ride>>();
             container.RegisterType<IRepository<Driver>, Repository<Driver>>();
             container.RegisterType<IRepository<Passenger>, Repository<Passenger>>();
