@@ -50,7 +50,14 @@ namespace jdrive_backend.Controllers
             {
                 int rideNumber = _rideService.GetRideNumber(acceptedRide.Driver.Id, acceptedRide.Passenger.Id);
                 bool match = _driverService.RideNumberMatch(acceptedRide.Driver.Id, rideNumber + 1);//+1 is for current ride.
-                string msg = match ? $"This ride is {rideNumber + 1}th and it will have a discount!!!" : string.Empty;
+                string msg = string.Empty;
+                if (match)
+                {
+                    var driver = _driverService.GetDriver(acceptedRide.Driver.Id);
+                    var totalDiscount = (driver.DiscountInPercentage / 100) * acceptedRide.EstimatedPrice;
+                    msg = $"This ride is {rideNumber + 1}th and it will have a discount = {totalDiscount}!!!";
+                }
+
                 rideViewModel = new RideViewModel(acceptedRide, msg);
             }
 
@@ -79,7 +86,7 @@ namespace jdrive_backend.Controllers
         // GET api/Ride/FindDrivers
         [HttpGet]
         [Route("FindDrivers")]
-        public IEnumerable<UserInfoViewModel> FindDrivers(double startLatitude, double startLongitude, double radius)
+        public IEnumerable<UserInfoViewModel> FindDrivers(double startLatitude, double startLongitude, double finishLatitude, double finishLongitude, double radius)
         {
             var nearDrivers = new List<UserInfoViewModel>();
             var drivers = _driverService.GetDrivers();
@@ -89,10 +96,12 @@ namespace jdrive_backend.Controllers
                 if (totalDistanceKm < radius)
                 {
                     DriverStatus driverStatus = _rideService.GetDriverStatus(driver.Id);
+                    var priceForRoute = GetTotalDistanceInKm(startLatitude, startLongitude, finishLatitude, finishLongitude) * driver.PricePerKm;
                     var nearDriver = new UserInfoViewModel(driver)
                     {
                         TotalDistance = totalDistanceKm,
-                        DriverStatus = driverStatus
+                        DriverStatus = driverStatus,
+                        PriceForRoute = priceForRoute
                     };
                     nearDrivers.Add(nearDriver);
                 }
@@ -123,6 +132,7 @@ namespace jdrive_backend.Controllers
                 StartLongitude = model.StartLongitude,
                 FinishLatitude = model.FinishLatitude,
                 FinishLongitude = model.FinishLongitude,
+                EstimatedPrice = model.EstimatedPrice,
                 Driver = driver,
                 Passenger = user
             };

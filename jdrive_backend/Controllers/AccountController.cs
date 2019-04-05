@@ -57,11 +57,11 @@ namespace jdrive_backend.Controllers
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         [HttpGet]
-        [Route("UpdateRideDiscountNumber")]
-        public void UpdateRideDiscountNumber(int rideDiscountNumber)
+        [Route("UpdateDriverSettings")]
+        public void UpdateDriverSettings(int rideDiscountNumber, double pricePerKm, double discountInPercentage)
         {
             var userId = User.Identity.GetUserId();
-            _driverService.UpdateRideDiscountNumber(userId, rideDiscountNumber);
+            _driverService.UpdateDriverSettings(userId, rideDiscountNumber, pricePerKm, discountInPercentage);
         }
 
         // GET api/Account/UserInfo
@@ -74,13 +74,21 @@ namespace jdrive_backend.Controllers
             var userId = User.Identity.GetUserId();
             double rating = _rideService.GetAverageRating(userId, currentUser is Driver ? UserType.Driver : UserType.Passenger);
 
-            return new UserInfoViewModel(currentUser)
+            var userInfo = new UserInfoViewModel(currentUser)
             {
                 Rating = rating,
-                RideDiscountNumber = currentUser is Driver ? ((Driver)currentUser).RideDiscountNumber : 0,
+                
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
+            if (currentUser is Driver)
+            {
+                var driver = currentUser as Driver;
+                userInfo.RideDiscountNumber = driver.RideDiscountNumber;
+                userInfo.PriceForRoute = driver.PricePerKm;
+                userInfo.DiscountInPercentage = driver.DiscountInPercentage;
+            }
+            return userInfo;
         }
 
         // POST api/Account/Logout

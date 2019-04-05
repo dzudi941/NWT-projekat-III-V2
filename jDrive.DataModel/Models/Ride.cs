@@ -12,6 +12,7 @@
         public RequestStatus RequestStatus { get; set; }
         public int DriverRating { get; set; }
         public int PassengerRating { get; set; }
+        public double EstimatedPrice { get; set; }
     }
 
     public enum RequestStatus

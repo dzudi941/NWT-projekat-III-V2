@@ -303,6 +303,22 @@
     <Compile Include="Migrations\201903281842109_driverModelUpdated.Designer.cs">
       <DependentUpon>201903281842109_driverModelUpdated.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904050628194_pricePerKm.cs" />
+    <Compile Include="Migrations\201904050628194_pricePerKm.Designer.cs">
+      <DependentUpon>201904050628194_pricePerKm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904050704138_estimatedPrice.cs" />
+    <Compile Include="Migrations\201904050704138_estimatedPrice.Designer.cs">
+      <DependentUpon>201904050704138_estimatedPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904050713323_discountInPercentage.cs" />
+    <Compile Include="Migrations\201904050713323_discountInPercentage.Designer.cs">
+      <DependentUpon>201904050713323_discountInPercentage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904050719007_discountInPercentageNullable.cs" />
+    <Compile Include="Migrations\201904050719007_discountInPercentageNullable.Designer.cs">
+      <DependentUpon>201904050719007_discountInPercentageNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -434,6 +450,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903281842109_driverModelUpdated.resx">
       <DependentUpon>201903281842109_driverModelUpdated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904050628194_pricePerKm.resx">
+      <DependentUpon>201904050628194_pricePerKm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904050704138_estimatedPrice.resx">
+      <DependentUpon>201904050704138_estimatedPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904050713323_discountInPercentage.resx">
+      <DependentUpon>201904050713323_discountInPercentage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904050719007_discountInPercentageNullable.resx">
+      <DependentUpon>201904050719007_discountInPercentageNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

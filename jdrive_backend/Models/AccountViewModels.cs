@@ -40,6 +40,8 @@ namespace jdrive_backend.Models
         public DriverStatus DriverStatus { get; set; }
         public double Rating { get; set; }
         public int? RideDiscountNumber { get; set; }
+        public double? PriceForRoute { get; set; }
+        public double? DiscountInPercentage { get; internal set; }
 
         public UserInfoViewModel(ApplicationUser applicationUser)
         {

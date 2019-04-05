@@ -14,6 +14,7 @@ namespace jdrive_backend.Models
         public double FinishLatitude { get; set; }
         public double FinishLongitude { get; set; }
         public string DriverId { get; set; }
+        public double EstimatedPrice { get; set; }
     }
 
     public class RideViewModel
@@ -28,6 +29,7 @@ namespace jdrive_backend.Models
         public string DriverId { get; set; }
         public string DriverName { get; set; }
         public RequestStatus RequestStatus { get; set; }
+        public double EstimatedPrice { get; set; }
         public string ExtraMessage { get; set; }
 
         public RideViewModel(Ride ride, string extraMessage = "")
@@ -42,6 +44,7 @@ namespace jdrive_backend.Models
             DriverId = ride.Driver?.Id ?? string.Empty;
             DriverName = ride.Driver?.FullName ?? string.Empty;
             RequestStatus = ride.RequestStatus;
+            EstimatedPrice = ride.EstimatedPrice;
             ExtraMessage = extraMessage;
         }
     }
