@@ -96,7 +96,7 @@ namespace jdrive_backend.Controllers
         {
             var driver = _driverService.GetDriver(model.DriverId);
             var userId = User.Identity.GetUserId();
-            var user = _passengerService.GetPassenger(userId);
+            var passenger = _passengerService.GetPassenger(userId);
             var newRide = new Ride()
             {
                 StartLatitude = model.StartLatitude,
@@ -105,7 +105,7 @@ namespace jdrive_backend.Controllers
                 FinishLongitude = model.FinishLongitude,
                 EstimatedPrice = model.EstimatedPrice,
                 Driver = driver,
-                Passenger = user
+                Passenger = passenger
             };
 
             _rideService.AddRide(newRide);
