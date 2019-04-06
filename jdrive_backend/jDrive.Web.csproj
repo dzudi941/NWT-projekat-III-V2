@@ -465,9 +465,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\jDrive.DataModel\jDrive.DataModel.csproj">
+    <ProjectReference Include="..\jDrive.DataModel\jDrive.DomainModel.csproj">
       <Project>{5ced99f4-27db-4e65-a099-7c149e8aaf12}</Project>
-      <Name>jDrive.DataModel</Name>
+      <Name>jDrive.DomainModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\jDrive.Repositories\jDrive.Repositories.csproj">
+      <Project>{995F59DF-CB04-4EE3-9E59-73A6C9BC6590}</Project>
+      <Name>jDrive.Repositories</Name>
     </ProjectReference>
     <ProjectReference Include="..\jDrive.Services\jDrive.Services.csproj">
       <Project>{72f50e27-ff0e-43e9-814b-e549c5953040}</Project>

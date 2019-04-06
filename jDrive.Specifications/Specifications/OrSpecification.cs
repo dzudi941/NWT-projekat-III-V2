@@ -1,14 +1,15 @@
-﻿using System;
+﻿using jDrive.DomainModel;
+using System;
 using System.Linq.Expressions;
 
-namespace jDrive.Services.Specifications
+namespace jDrive.Specifications.Specifications
 {
-    public class AndSpecification<T> : Specification<T>
+    public class OrSpecification<T> : Specification<T>
     {
-        private readonly Specification<T> _left;
-        private readonly Specification<T> _right;
+        private readonly ISpecification<T> _left;
+        private readonly ISpecification<T> _right;
 
-        public AndSpecification(Specification<T> left, Specification<T> right)
+        public OrSpecification(ISpecification<T> left, ISpecification<T> right)
         {
             _left = left;
             _right = right;
@@ -20,7 +21,7 @@ namespace jDrive.Services.Specifications
             Expression<Func<T, bool>> rightExpression = _right.ToExpression();
 
             var paramExpr = Expression.Parameter(typeof(T));
-            var exprBody = Expression.AndAlso(leftExpression.Body, rightExpression.Body);
+            var exprBody = Expression.OrElse(leftExpression.Body, rightExpression.Body);
             exprBody = (BinaryExpression)new ParameterReplacer(paramExpr).Visit(exprBody);
             var finalExpr = Expression.Lambda<Func<T, bool>>(exprBody, paramExpr);
 

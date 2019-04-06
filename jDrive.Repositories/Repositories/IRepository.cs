@@ -1,8 +1,8 @@
-﻿using jDrive.Services.Specifications;
+﻿using jDrive.DomainModel;
 using System;
 using System.Collections.Generic;
 
-namespace jDrive.Services.Services
+namespace jDrive.Repositories.Repositories
 {
     public interface IRepository<T> : IDisposable where T : class
     {
@@ -11,6 +11,6 @@ namespace jDrive.Services.Services
         void Update(T entity);
         void Delete(T entity);
         IEnumerable<T> Table { get; }
-        IEnumerable<T> Find(Specification<T> specification, params string[] includes);
+        IEnumerable<T> Find(ISpecification<T> specification, params string[] includes);
     }
 }

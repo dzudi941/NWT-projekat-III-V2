@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using jDrive.DataModel.Models;
-using jDrive.Services.Specifications;
+﻿using System.Linq;
+using jDrive.DomainModel.Models;
+using jDrive.Repositories.Repositories;
+using jDrive.Specifications.Specifications;
 
 namespace jDrive.Services.Services
 {
@@ -24,17 +24,6 @@ namespace jDrive.Services.Services
             return _repository.Find(new UserIdSpecification<Driver>(id)).FirstOrDefault();
         }
 
-        public IEnumerable<Driver> GetDrivers()
-        {
-            return _repository.Table;
-        }
-
-        public bool RideNumberMatch(string userId, int rideNumber)
-        {
-            var driver = _repository.Find(new UserIdSpecification<Driver>(userId)).FirstOrDefault();
-            return rideNumber % driver.RideDiscountNumber == 0;
-        }
-
         public void UpdateDriverSettings(string userId, int rideDiscountNumber, double pricePerKm, double discountInPercentage)
         {
             var driver = _repository.Find(new UserIdSpecification<Driver>(userId)).FirstOrDefault();
@@ -51,12 +40,5 @@ namespace jDrive.Services.Services
             driver.Latitude = latitude;
             _repository.Update(driver);
         }
-
-        //public void UpdateRideDiscountNumber(string userId, int rideDiscountNumber)
-        //{
-        //    var driver = _repository.Find(new UserIdSpecification<Driver>(userId)).FirstOrDefault();
-        //    driver.RideDiscountNumber = rideDiscountNumber;
-        //    _repository.Update(driver);
-        //}
     }
 }

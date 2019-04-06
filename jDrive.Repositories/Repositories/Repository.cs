@@ -1,13 +1,12 @@
-﻿using jDrive.DataModel.Models;
-using jDrive.Services.Specifications;
+﻿using jDrive.DomainModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
-using System.Linq.Expressions;
 
-namespace jDrive.Services.Services
+
+namespace jDrive.Repositories.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -67,7 +66,7 @@ namespace jDrive.Services.Services
             }
         }
 
-        public IEnumerable<T> Find(Specification<T> specification, params string[] includes)
+        public IEnumerable<T> Find(ISpecification<T> specification, params string[] includes)
         {
             var exp = specification.ToExpression();
             IQueryable<T> sets = Entities;

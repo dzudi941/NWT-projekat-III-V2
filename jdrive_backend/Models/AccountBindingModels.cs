@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using jDrive.DataModel.Models;
+using jDrive.DomainModel.Models;
 using Newtonsoft.Json;
 
 namespace jdrive_backend.Models

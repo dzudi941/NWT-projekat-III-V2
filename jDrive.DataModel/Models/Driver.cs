@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace jDrive.DataModel.Models
+namespace jDrive.DomainModel.Models
 {
     public class Driver : ApplicationUser
     {

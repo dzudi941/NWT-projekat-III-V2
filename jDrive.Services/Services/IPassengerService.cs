@@ -1,4 +1,4 @@
-﻿using jDrive.DataModel.Models;
+﻿using jDrive.DomainModel.Models;
 
 namespace jDrive.Services.Services
 {

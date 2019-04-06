@@ -1,14 +1,15 @@
-﻿using System;
+﻿using jDrive.DomainModel;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace jDrive.Services.Specifications
+namespace jDrive.Specifications.Specifications
 {
     public class NotSpecification<T> : Specification<T>
     {
-        private readonly Specification<T> _specification;
+        private readonly ISpecification<T> _specification;
 
-        public NotSpecification(Specification<T> specification)
+        public NotSpecification(ISpecification<T> specification)
         {
             _specification = specification;
         }

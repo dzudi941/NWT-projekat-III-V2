@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
+using jDrive.DomainModel;
 
-namespace jDrive.Services.Specifications
+namespace jDrive.Specifications.Specifications
 {
-    public abstract class Specification<T>
+    public abstract class Specification<T>: ISpecification<T>
     {
         public abstract Expression<Func<T, bool>> ToExpression();
 
@@ -13,17 +14,17 @@ namespace jDrive.Services.Specifications
             return predicate(entity);
         }
 
-        public Specification<T> And(Specification<T> specification)
+        public ISpecification<T> And(ISpecification<T> specification)
         {
             return new AndSpecification<T>(this, specification);
         }
 
-        public Specification<T> Or(Specification<T> specification)
+        public ISpecification<T> Or(ISpecification<T> specification)
         {
             return new OrSpecification<T>(this, specification);
         }
 
-        public Specification<T> Not()
+        public ISpecification<T> Not()
         {
             return new NotSpecification<T>(this);
         }

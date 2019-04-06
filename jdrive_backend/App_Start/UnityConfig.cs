@@ -1,4 +1,6 @@
-using jDrive.DataModel.Models;
+using jDrive.DomainModel.Models;
+using jDrive.DomainModel;
+using jDrive.Repositories.Repositories;
 using jDrive.Services.Services;
 using System.Web;
 using System.Web.Http;

@@ -1,28 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using jDrive.DataModel.Models;
-using jDrive.Services.Specifications;
+using jDrive.DomainModel.Models;
+using jDrive.Repositories.Repositories;
+using jDrive.Specifications.Specifications;
 
 namespace jDrive.Services.Services
 {
     public class RideService : IRideService
     {
-        private IRepository<Ride> _repository;
+        private IRepository<Ride> _rideRepository;
+        private IRepository<Driver> _driverRepository;
 
 
-        public RideService(IRepository<Ride> repository)
+        public RideService(IRepository<Ride> rideRepository, IRepository<Driver> driverRepository)
         {
-            _repository = repository;
+            _rideRepository = rideRepository;
+            _driverRepository = driverRepository;
         }
 
         public void AddRide(Ride ride)
         {
-            _repository.Insert(ride);
+            _rideRepository.Insert(ride);
         }
 
         public void FinishRide(int rideId, UserType usertype, int rating)
         {
-            var ride = _repository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
+            var ride = _rideRepository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
 
             if (usertype == UserType.Driver && ride.DriverRating == 0)
             {
@@ -35,62 +39,67 @@ namespace jDrive.Services.Services
             if (ride.PassengerRating > 0 && ride.DriverRating > 0)
                 ride.RequestStatus = RequestStatus.Finished;
 
-            _repository.Update(ride);
-        }
-
-        public Ride GetRide(double startLatitude, double startLongitude, double finishLatitude, double finishLongitude)
-        {
-            return _repository.Find(new RideRouteSpecification(startLatitude, startLongitude, finishLatitude, finishLongitude)).FirstOrDefault();
+            _rideRepository.Update(ride);
         }
 
         public IEnumerable<Ride> GetRides(string userId)
         {
-            return _repository.Find(new RideUserSpecification(userId)).Where(x=>x.RequestStatus == RequestStatus.Finished);
+            return _rideRepository.Find(new RideUserSpecification(userId)).Where(x=>x.RequestStatus == RequestStatus.Finished);
         }
 
         public Ride AcceptedRide(string userId)
         {
-            return _repository.Find(new RideUserSpecification(userId), nameof(Driver), nameof(Passenger)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Accepted);
+            return _rideRepository.Find(new RideUserSpecification(userId), nameof(Driver), nameof(Passenger)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Accepted);
         }
 
         public Ride PendingRequest(string userId)
         {
-            return _repository.Find(new RideUserSpecification(userId), nameof(Driver), nameof(Passenger)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Pending);
+            return _rideRepository.Find(new RideUserSpecification(userId), nameof(Driver), nameof(Passenger)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Pending);
         }
 
         public IEnumerable<Ride> GetRideRequests(string userId)
         {
-            return _repository.Find(new RideUserSpecification(userId)).Where(x => x.RequestStatus == RequestStatus.Pending);
+            return _rideRepository.Find(new RideUserSpecification(userId)).Where(x => x.RequestStatus == RequestStatus.Pending);
         }
 
         public void AcceptRide(int rideId)
         {
-            var ride = _repository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
+            var ride = _rideRepository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
             ride.RequestStatus = RequestStatus.Accepted;
-            _repository.Update(ride);
+            _rideRepository.Update(ride);
         }
 
         public void DeclineRide(int rideId)
         {
-            var ride = _repository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
+            var ride = _rideRepository.Find(new RideNumberSpecification(rideId)).FirstOrDefault();
             ride.RequestStatus = RequestStatus.Rejected;
-            _repository.Update(ride);
+            _rideRepository.Update(ride);
         }
 
-        public int GetRideNumber(string driverId, string passengerId)
+        private double TotalDiscount(Ride ride, out int rideNumber)
         {
-            return _repository.Find(new RideUserSpecification(driverId).And(new RideUserSpecification(passengerId))).Count(x => x.RequestStatus == RequestStatus.Finished);
+            var ridesCount = _rideRepository.Find(new RideUserSpecification(ride.Driver.Id).And(new RideUserSpecification(ride.Passenger.Id))).Count(x => x.RequestStatus == RequestStatus.Finished);
+            var driver = _driverRepository.Find(new UserIdSpecification<Driver>(ride.Driver.Id)).FirstOrDefault();
+            double totalDiscount = 0;
+            if (ridesCount % driver.RideDiscountNumber == 0)
+            {
+                totalDiscount = (driver.DiscountInPercentage.Value / 100) * ride.EstimatedPrice;
+            }
+            rideNumber = ridesCount + 1;
+            return totalDiscount;
         }
 
-        public DriverStatus GetDriverStatus(string driverId)
+        public Ride GetCurrentRide(string userId, out double totalDiscount, out int rideNumber)
         {
-            IEnumerable<Ride> rides = _repository.Find(new RideUserSpecification(driverId));
-            if (rides.Any(x => x.RequestStatus == RequestStatus.Pending))
-                return DriverStatus.PendingRequest;
-            if (rides.Any(x => x.RequestStatus == RequestStatus.Accepted))
-                return DriverStatus.NotAvailable;
-
-            return DriverStatus.Available;
+            Ride acceptedRide = _rideRepository.Find(new RideUserSpecification(userId), nameof(Driver), nameof(Passenger)).FirstOrDefault(x => x.RequestStatus == RequestStatus.Accepted);
+            if (acceptedRide != null)
+            {
+                totalDiscount = TotalDiscount(acceptedRide, out rideNumber);
+                return acceptedRide;
+            }
+            totalDiscount = 0;
+            rideNumber = 0;
+            return null;
         }
 
         public double GetAverageRating(string userId, UserType userType)
@@ -98,6 +107,45 @@ namespace jDrive.Services.Services
             var rides = GetRides(userId);
 
             return rides.Count() > 0 ? rides.Average(x => userType == UserType.Driver ? x.DriverRating : x.PassengerRating) : 0;
+        }
+
+        public IEnumerable<(Driver, double, DriverStatus, double?)> FindDrivers(double startLatitude, double startLongitude, double finishLatitude, double finishLongitude, double radius)
+        {
+            var nearDrivers = new List<(Driver, double, DriverStatus, double?)>();
+            var drivers = _driverRepository.Table;
+            foreach (var driver in drivers)
+            {
+                var totalDistanceKm = GetTotalDistanceInKm(driver.Latitude, driver.Longitude, startLatitude, startLongitude);
+                if (totalDistanceKm < radius)
+                {
+                    DriverStatus driverStatus = GetDriverStatus(driver.Id);
+                    var priceForRoute = GetTotalDistanceInKm(startLatitude, startLongitude, finishLatitude, finishLongitude) * driver.PricePerKm;
+
+                    nearDrivers.Add((driver, totalDistanceKm, driverStatus, priceForRoute));
+                }
+            }
+
+            return nearDrivers.OrderBy(x => x.Item2).ToList();
+        }
+
+
+        private double GetTotalDistanceInKm(double aLatitude, double aLongitude, double bLatitude, double bLongitude)
+        {
+            double xDistance = Math.Abs(aLatitude - bLatitude);
+            double yDistance = Math.Abs(aLongitude - bLongitude);
+            double totalDistance = Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
+            return totalDistance * 111;
+        }
+
+        private DriverStatus GetDriverStatus(string driverId)
+        {
+            IEnumerable<Ride> rides = _rideRepository.Find(new RideUserSpecification(driverId));
+            if (rides.Any(x => x.RequestStatus == RequestStatus.Pending))
+                return DriverStatus.PendingRequest;
+            if (rides.Any(x => x.RequestStatus == RequestStatus.Accepted))
+                return DriverStatus.NotAvailable;
+
+            return DriverStatus.Available;
         }
     }
 }

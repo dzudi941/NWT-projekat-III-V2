@@ -11,8 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using jdrive_backend.Models;
-using System.Linq;
-using jDrive.DataModel.Models;
+using jDrive.DomainModel.Models;
 using jDrive.Services.Services;
 
 namespace jdrive_backend.Controllers
@@ -77,7 +76,6 @@ namespace jdrive_backend.Controllers
             var userInfo = new UserInfoViewModel(currentUser)
             {
                 Rating = rating,
-                
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };

@@ -1,4 +1,4 @@
-﻿using jDrive.DataModel.Models;
+﻿using jDrive.DomainModel.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +30,11 @@ namespace jdrive_backend.Models
         public string DriverName { get; set; }
         public RequestStatus RequestStatus { get; set; }
         public double EstimatedPrice { get; set; }
-        public string ExtraMessage { get; set; }
+        //public string ExtraMessage { get; set; }
+        double TotalDiscount { get; set; }
+        double RideNumber { get; set; }
 
-        public RideViewModel(Ride ride, string extraMessage = "")
+        public RideViewModel(Ride ride, double totalDiscount = 0, int rideNumber = 0)
         {
             Id = ride.Id;
             StartLatitude = ride.StartLatitude;
@@ -45,7 +47,8 @@ namespace jdrive_backend.Models
             DriverName = ride.Driver?.FullName ?? string.Empty;
             RequestStatus = ride.RequestStatus;
             EstimatedPrice = ride.EstimatedPrice;
-            ExtraMessage = extraMessage;
+            TotalDiscount = totalDiscount;
+            RideNumber = rideNumber;
         }
     }
 }

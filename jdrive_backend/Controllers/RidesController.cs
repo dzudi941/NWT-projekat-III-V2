@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Web.Http;
 using jdrive_backend.Models;
-using jDrive.DataModel.Models;
+using jDrive.DomainModel.Models;
 using jDrive.Services.Services;
 
 namespace jdrive_backend.Controllers
@@ -44,21 +44,13 @@ namespace jdrive_backend.Controllers
         public RideViewModel CurrentRide()
         {
             var userId = User.Identity.GetUserId();
-            var acceptedRide = _rideService.AcceptedRide(userId);
+            double totalDiscount = 0;
+            int rideNumber = 0;
+            var currentRide = _rideService.GetCurrentRide(userId, out totalDiscount, out rideNumber);
             RideViewModel rideViewModel = null;
-            if (acceptedRide != null)
+            if (currentRide != null)
             {
-                int rideNumber = _rideService.GetRideNumber(acceptedRide.Driver.Id, acceptedRide.Passenger.Id);
-                bool match = _driverService.RideNumberMatch(acceptedRide.Driver.Id, rideNumber + 1);//+1 is for current ride.
-                string msg = string.Empty;
-                if (match)
-                {
-                    var driver = _driverService.GetDriver(acceptedRide.Driver.Id);
-                    var totalDiscount = (driver.DiscountInPercentage / 100) * acceptedRide.EstimatedPrice;
-                    msg = $"This ride is {rideNumber + 1}th and it will have a discount = {totalDiscount}!!!";
-                }
-
-                rideViewModel = new RideViewModel(acceptedRide, msg);
+                rideViewModel = new RideViewModel(currentRide, totalDiscount, rideNumber);
             }
 
             return rideViewModel;
@@ -88,34 +80,13 @@ namespace jdrive_backend.Controllers
         [Route("FindDrivers")]
         public IEnumerable<UserInfoViewModel> FindDrivers(double startLatitude, double startLongitude, double finishLatitude, double finishLongitude, double radius)
         {
-            var nearDrivers = new List<UserInfoViewModel>();
-            var drivers = _driverService.GetDrivers();
-            foreach (var driver in drivers)
-            {
-                var totalDistanceKm = GetTotalDistanceInKm(driver.Latitude, driver.Longitude, startLatitude, startLongitude);
-                if (totalDistanceKm < radius)
-                {
-                    DriverStatus driverStatus = _rideService.GetDriverStatus(driver.Id);
-                    var priceForRoute = GetTotalDistanceInKm(startLatitude, startLongitude, finishLatitude, finishLongitude) * driver.PricePerKm;
-                    var nearDriver = new UserInfoViewModel(driver)
-                    {
-                        TotalDistance = totalDistanceKm,
-                        DriverStatus = driverStatus,
-                        PriceForRoute = priceForRoute
-                    };
-                    nearDrivers.Add(nearDriver);
-                }
-            }
+            var nearDrivers = _rideService.FindDrivers(startLatitude, startLongitude, finishLatitude, finishLongitude, radius);
 
-            return nearDrivers.OrderBy(x => x.TotalDistance).ToList();
-        }
-
-        private double GetTotalDistanceInKm(double aLatitude, double aLongitude, double bLatitude, double bLongitude)
-        {
-            double xDistance = Math.Abs(aLatitude - bLatitude);
-            double yDistance = Math.Abs(aLongitude - bLongitude);
-            double totalDistance = Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
-            return totalDistance * 111;
+            return nearDrivers.Select(x=> new UserInfoViewModel(x.Item1) {
+                TotalDistance = x.Item2,
+                DriverStatus = x.Item3,
+                PriceForRoute = x.Item4
+            });
         }
 
         //GET api/Ride/SendRequest

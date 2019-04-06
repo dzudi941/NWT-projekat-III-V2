@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{72F50E27-FF0E-43E9-814B-E549C5953040}</ProjectGuid>
+    <ProjectGuid>{C2DA8A47-FE2B-40C1-BB5A-FD0B23C9F08F}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>jDrive.Services</RootNamespace>
-    <AssemblyName>jDrive.Services</AssemblyName>
+    <RootNamespace>jDrive.Specifications</RootNamespace>
+    <AssemblyName>jDrive.Specifications</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -43,16 +43,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -80,25 +74,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DriverService.cs" />
-    <Compile Include="Services\IDriverService.cs" />
-    <Compile Include="Services\IPassengerService.cs" />
-    <Compile Include="Services\IRideService.cs" />
-    <Compile Include="Services\PassengerService.cs" />
-    <Compile Include="Services\RideService.cs" />
+    <Compile Include="Specifications\AndSpecificationcs.cs" />
+    <Compile Include="Specifications\NotSpecification.cs" />
+    <Compile Include="Specifications\OrSpecification.cs" />
+    <Compile Include="Specifications\ParameterReplacer.cs" />
+    <Compile Include="Specifications\RideNumberSpecification.cs" />
+    <Compile Include="Specifications\RideRouteSpecification.cs" />
+    <Compile Include="Specifications\RideUserSpecification.cs" />
+    <Compile Include="Specifications\Specification.cs" />
+    <Compile Include="Specifications\UserIdSpecification.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\jDrive.DataModel\jDrive.DomainModel.csproj">
       <Project>{5ced99f4-27db-4e65-a099-7c149e8aaf12}</Project>
       <Name>jDrive.DomainModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\jDrive.Repositories\jDrive.Repositories.csproj">
-      <Project>{995f59df-cb04-4ee3-9e59-73a6c9bc6590}</Project>
-      <Name>jDrive.Repositories</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\jDrive.Specifications\jDrive.Specifications.csproj">
-      <Project>{c2da8a47-fe2b-40c1-bb5a-fd0b23c9f08f}</Project>
-      <Name>jDrive.Specifications</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -114,9 +103,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>60880</DevelopmentServerPort>
+          <DevelopmentServerPort>61249</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:60880/</IISUrl>
+          <IISUrl>http://localhost:61249/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

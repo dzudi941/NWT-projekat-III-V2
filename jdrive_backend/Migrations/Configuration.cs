@@ -1,11 +1,9 @@
+using jDrive.DomainModel;
+using System.Data.Entity.Migrations;
+
+
 namespace jdrive_backend.Migrations
 {
-    using jDrive.DataModel.Models;
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
     internal sealed class Configuration : DbMigrationsConfiguration<JDriveDbContext>
     {
         public Configuration()

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace jDrive.Services.Specifications
+namespace jDrive.Specifications.Specifications
 {
     internal class ParameterReplacer : ExpressionVisitor
     {

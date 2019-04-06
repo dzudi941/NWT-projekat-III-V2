@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using jDrive.DomainModel.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
-namespace jDrive.DataModel.Models
+namespace jDrive.DomainModel
 {
     public interface IJDriveDbContext
     {

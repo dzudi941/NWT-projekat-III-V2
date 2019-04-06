@@ -1,8 +1,8 @@
-﻿using jDrive.DataModel.Models;
+﻿using jDrive.DomainModel.Models;
 using System;
 using System.Linq.Expressions;
 
-namespace jDrive.Services.Specifications
+namespace jDrive.Specifications.Specifications
 {
     public class RideNumberSpecification : Specification<Ride>
     {

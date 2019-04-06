@@ -1,5 +1,6 @@
-﻿using jDrive.DataModel.Models;
-using jDrive.Services.Specifications;
+﻿using jDrive.DomainModel.Models;
+using jDrive.Repositories.Repositories;
+using jDrive.Specifications.Specifications;
 using System.Linq;
 
 namespace jDrive.Services.Services

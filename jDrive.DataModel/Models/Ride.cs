@@ -1,4 +1,4 @@
-﻿namespace jDrive.DataModel.Models
+﻿namespace jDrive.DomainModel.Models
 {
     public class Ride
     {
