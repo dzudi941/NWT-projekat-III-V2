@@ -1,8 +1,7 @@
-﻿using jDrive.DomainModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace jDrive.Repositories.Repositories
+namespace jDrive.DomainModel
 {
     public interface IRepository<T> : IDisposable where T : class
     {

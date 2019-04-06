@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using jDrive.DomainModel.Models;
-using jDrive.Repositories.Repositories;
+using jDrive.DomainModel;
 using jDrive.Specifications.Specifications;
 
 namespace jDrive.Services.Services

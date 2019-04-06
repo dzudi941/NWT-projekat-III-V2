@@ -92,10 +92,6 @@
       <Project>{5ced99f4-27db-4e65-a099-7c149e8aaf12}</Project>
       <Name>jDrive.DomainModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\jDrive.Repositories\jDrive.Repositories.csproj">
-      <Project>{995f59df-cb04-4ee3-9e59-73a6c9bc6590}</Project>
-      <Name>jDrive.Repositories</Name>
-    </ProjectReference>
     <ProjectReference Include="..\jDrive.Specifications\jDrive.Specifications.csproj">
       <Project>{c2da8a47-fe2b-40c1-bb5a-fd0b23c9f08f}</Project>
       <Name>jDrive.Specifications</Name>

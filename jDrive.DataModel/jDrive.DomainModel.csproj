@@ -79,6 +79,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IRepository.cs" />
     <Compile Include="ISpecification.cs" />
     <Compile Include="JDriveDbContext.cs" />
     <Compile Include="Models\Driver.cs" />
